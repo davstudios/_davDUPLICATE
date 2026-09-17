@@ -1,0 +1,7 @@
+_davDUPLICATE v1.0.0
+
+Automated tests: 11
+Passed: 11
+Failed: 0
+
+Checks include duplicate-selection logic, hard-link-safe reclaimable calculations, filters, extension extraction, byte-size formatting and the source no-comments audit.
