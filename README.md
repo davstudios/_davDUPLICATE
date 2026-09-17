@@ -6,7 +6,7 @@
 **Trova duplicati reali e recupera spazio senza cancellazioni automatiche.**  
 **Find true duplicates and reclaim space without automatic deletion.**
 
-`v1.0.0` · Windows · macOS · Linux · Local-first · Open source
+`v1.0.1` · Windows · macOS · Linux · Local-first · Open source
 
 [![Italiano](https://img.shields.io/badge/Italiano-006EDB?style=for-the-badge)](#-italiano)
 [![English](https://img.shields.io/badge/English-141416?style=for-the-badge)](#-english)

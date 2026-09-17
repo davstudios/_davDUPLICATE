@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.1
+
+- La versione mostrata nell'interfaccia viene ora letta automaticamente dal runtime Tauri.
+- Rimossi i numeri di versione hardcoded dalla UI.
+- Aggiunti test automatici per mantenere sincronizzati package.json, tauri.conf.json e Cargo.toml.
+- Aggiunto un controllo che impedisce di reintrodurre versioni hardcoded in src/main.js.
+
 ## 1.0.0
 
 Stable release of `_davDUPLICATE`.

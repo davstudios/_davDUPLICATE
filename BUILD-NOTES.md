@@ -1,4 +1,4 @@
-# _davDUPLICATE v1.0.0 build notes
+# _davDUPLICATE v1.0.1 build notes
 
 ## Requirements
 
@@ -20,4 +20,4 @@ On Ubuntu/Debian run `./INSTALL-LINUX-DEPS-UBUNTU.sh` first, then use `./RUN-LIN
 
 ## Release scope
 
-Version 1.0.0 is the stable exact-duplicate release. It verifies candidates byte for byte, recognizes hard links and moves explicitly selected files to the operating system Trash instead of permanently deleting them.
+Version 1.0.1 is the stable exact-duplicate release. It verifies candidates byte for byte, recognizes hard links and moves explicitly selected files to the operating system Trash instead of permanently deleting them.

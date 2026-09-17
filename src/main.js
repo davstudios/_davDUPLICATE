@@ -1,6 +1,7 @@
 import './styles.css';
 import './motion.css';
 import { invoke } from '@tauri-apps/api/core';
+import { getVersion } from '@tauri-apps/api/app';
 import { listen } from '@tauri-apps/api/event';
 import { getCurrentWebview } from '@tauri-apps/api/webview';
 import { open, confirm } from '@tauri-apps/plugin-dialog';
@@ -51,7 +52,8 @@ const state = {
     recursive: saved.recursive ?? true,
     minScanSize: saved.minScanSize ?? 1
   },
-  activity: JSON.parse(localStorage.getItem('davduplicate-activity') || '[]')
+  activity: JSON.parse(localStorage.getItem('davduplicate-activity') || '[]'),
+  appVersion: ''
 };
 
 function t(it, en) {
@@ -102,7 +104,7 @@ function render(motion = 'none') {
 
 function renderExact(motion = 'none') {
   if (!state.scanSummary && !state.scanning) {
-    shell(`<header class="topbar"><div><div class="eyebrow">_davDUPLICATE · v1.0.0</div><h1>${t('Trova copie vere. Recupera spazio.', 'Find true copies. Reclaim space.')}</h1></div></header>
+    shell(`<header class="topbar"><div><div class="eyebrow">_davDUPLICATE${state.appVersion ? ` · v${escapeHtml(state.appVersion)}` : ''}</div><h1>${t('Trova copie vere. Recupera spazio.', 'Find true copies. Reclaim space.')}</h1></div></header>
       <section class="empty-wrap">
         <div class="drop-zone" id="drop-zone">
           <div class="drop-icon">${icons.duplicate}</div>
@@ -202,7 +204,7 @@ function renderSettings(motion = 'page') {
     <section class="settings-grid">
       <div class="panel settings-card"><h2>${t('Scansione', 'Scanning')}</h2><div class="setting-row"><span><strong>${t('Cartelle ricorsive','Recursive folders')}</strong><small>${t('Scansiona anche tutte le sottocartelle senza seguire symlink.','Scan subfolders without following symlinks.')}</small></span><label class="switch"><input type="checkbox" data-setting="recursive" ${state.settings.recursive ? 'checked' : ''}><span></span></label></div><div class="setting-control"><span class="setting-control-label">${t('Dimensione minima durante la scansione','Minimum size while scanning')}</span>${davSelect('minScanSize', String(state.settings.minScanSize), [['1',t('Qualsiasi file non vuoto','Any non-empty file')],['1048576','1 MB'],['10485760','10 MB'],['104857600','100 MB']])}</div></div>
       <div class="panel settings-card"><h2>${t('Aspetto', 'Appearance')}</h2><div class="setting-control"><span class="setting-control-label">${t('Tema','Theme')}</span>${davSelect('theme', state.settings.theme, [['system',t('Sistema','System')],['light',t('Chiaro','Light')],['dark',t('Scuro','Dark')]])}</div><div class="setting-control"><span class="setting-control-label">${t('Lingua','Language')}</span>${davSelect('language', state.settings.language, [['it','Italiano'],['en','English']])}</div></div>
-      <div class="panel about-card"><div class="brand big"><span>_dav</span>DUPLICATE</div><p>${t('Ricerca duplicati esatti locale, verificata byte per byte e progettata per non cancellare automaticamente nulla.', 'Local exact-duplicate finder, verified byte for byte and designed to never delete anything automatically.')}</p><div class="about-links"><button class="website-button" data-action="website">${icons.globe}<span>davstudios.it</span></button><button class="coffee-button wide" data-action="coffee">${icons.coffee}<span>${t('Comprami Un Caffè','Buy Me A Coffee')}</span></button></div><div class="version">v1.0.0 · ${t('Release stabile','Stable release')}</div></div>
+      <div class="panel about-card"><div class="brand big"><span>_dav</span>DUPLICATE</div><p>${t('Ricerca duplicati esatti locale, verificata byte per byte e progettata per non cancellare automaticamente nulla.', 'Local exact-duplicate finder, verified byte for byte and designed to never delete anything automatically.')}</p><div class="about-links"><button class="website-button" data-action="website">${icons.globe}<span>davstudios.it</span></button><button class="coffee-button wide" data-action="coffee">${icons.coffee}<span>${t('Comprami Un Caffè','Buy Me A Coffee')}</span></button></div><div class="version">${state.appVersion ? `v${escapeHtml(state.appVersion)} · ` : ''}${t('Release stabile','Stable release')}</div></div>
     </section>`, motion);
   bindSettings();
 }
@@ -368,6 +370,11 @@ function toast(text, kind='success') {
 
 async function init() {
   applyTheme();
+  try {
+    state.appVersion = await getVersion();
+  } catch {
+    state.appVersion = '';
+  }
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{ if(state.settings.theme==='system') render(); });
   await listen('duplicate-progress',(event)=>{ state.progress=event.payload; if(state.scanning) render(); });
   if (isTauri) {

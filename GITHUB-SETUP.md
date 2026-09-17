@@ -7,8 +7,8 @@
 5. Per pubblicare la release stabile crea il tag:
 
 ```bash
-git tag -a v1.0.0 -m "Release _davDUPLICATE v1.0.0"
-git push origin v1.0.0
+git tag -a v1.0.1 -m "Release _davDUPLICATE v1.0.1"
+git push origin v1.0.1
 ```
 
 GitHub Actions creerà le build Windows, macOS e Linux e le allegherà alla release stabile. Il workflow può anche essere avviato manualmente indicando un tag già esistente.
