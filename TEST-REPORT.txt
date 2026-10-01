@@ -1,7 +1,15 @@
-_davDUPLICATE v1.0.1
+_davDUPLICATE v26.10.1
 
-Automated tests: 13
-Passed: 13
+Automated tests: 18
+Passed: 18
 Failed: 0
 
-Checks include duplicate-selection logic, hard-link-safe reclaimable calculations, filters, extension extraction, byte-size formatting, release-version synchronization, automatic UI version loading and the source no-comments audit.
+Checks include duplicate-selection logic, hard-link-safe reclaimable calculations, filters, extension extraction, byte-size formatting, release-version synchronization, automatic UI version loading, _davstudios package metadata, bilingual GitHub Release description wiring, unsigned-release README guidance and the source no-comments audit.
+
+Additional validation:
+- JavaScript syntax: PASS
+- JSON parsing: PASS
+- GitHub Actions YAML parsing: PASS
+- RELEASE_TAG v26.10.1 alignment check: PASS
+- Core application source compared with supplied source: unchanged
+- Tauri PNG icons: valid RGBA

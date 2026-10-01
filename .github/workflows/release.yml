@@ -6,8 +6,8 @@ on:
       - 'v*'
   workflow_dispatch:
     inputs:
-      release_tag:
-        description: 'Existing release tag, for example v1.0.1'
+      tag:
+        description: 'Existing tag to build, for example v26.10.1'
         required: true
         type: string
 
@@ -27,22 +27,75 @@ jobs:
             args: '--bundles appimage,deb'
     runs-on: ${{ matrix.platform }}
     env:
-      RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.ref_name }}
+      RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.ref }}
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
 
       - name: Install Linux dependencies
         if: matrix.platform == 'ubuntu-22.04'
+        shell: bash
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf xdg-utils
+          set -euo pipefail
+          sudo sed -i '\|packages.microsoft.com|d' /etc/apt/sources.list 2>/dev/null || true
+          for source_file in /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources; do
+            [ -f "$source_file" ] || continue
+            if sudo grep -q 'packages.microsoft.com' "$source_file"; then
+              sudo mv "$source_file" "${source_file}.disabled-davduplicate"
+            fi
+          done
+          sudo apt-get -o Acquire::Retries=3 update
+          sudo apt-get install -y --no-install-recommends libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf xdg-utils
 
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 'lts/*'
+
+      - name: Verify release versions
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const tag = process.env.RELEASE_TAG;
+          const expected = tag.replace(/^v/, '');
+          const packageVersion = JSON.parse(fs.readFileSync('package.json', 'utf8')).version;
+          const tauriVersion = JSON.parse(fs.readFileSync('src-tauri/tauri.conf.json', 'utf8')).version;
+          const cargoText = fs.readFileSync('src-tauri/Cargo.toml', 'utf8');
+          const cargoVersion = cargoText.match(/^version\s*=\s*"([^"]+)"/m)?.[1];
+          const versions = { packageVersion, tauriVersion, cargoVersion };
+          const mismatches = Object.entries(versions).filter(([, value]) => value !== expected);
+          if (mismatches.length) {
+            console.error(`Release tag ${tag} expects app version ${expected}.`);
+            for (const [name, value] of Object.entries(versions)) console.error(`${name}: ${value}`);
+            process.exit(1);
+          }
+          console.log(`Release versions are aligned on ${expected}.`);
+          NODE
+
+      - name: Read release description from tagged commit
+        id: release_description
+        shell: bash
+        run: |
+          body="$(git log -1 --pretty=%b)"
+
+          if [[ -z "${body//[[:space:]]/}" ]]; then
+            echo "The tagged commit has no Description/body." >&2
+            exit 1
+          fi
+
+          if [[ "$body" != *"🇮🇹"* || "$body" != *"🇺🇸"* ]]; then
+            echo "The commit Description must contain both 🇮🇹 and 🇺🇸 sections." >&2
+            exit 1
+          fi
+
+          delimiter="DAV_RELEASE_BODY_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}"
+          {
+            echo "body<<$delimiter"
+            printf '%s\n' "$body"
+            echo "$delimiter"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
@@ -57,9 +110,6 @@ jobs:
       - name: Install frontend dependencies
         run: npm install
 
-      - name: Verify release version
-        run: node scripts/verify-release-version.mjs
-
       - name: Run tests
         run: npm test
 
@@ -70,8 +120,7 @@ jobs:
         with:
           tagName: ${{ env.RELEASE_TAG }}
           releaseName: '_davDUPLICATE ${{ env.RELEASE_TAG }}'
-          releaseBody: 'Stable release of _davDUPLICATE. Download the installer for your operating system from the assets below.'
+          releaseBody: ${{ steps.release_description.outputs.body }}
           releaseDraft: false
           prerelease: false
-          generateReleaseNotes: true
           args: ${{ matrix.args }}

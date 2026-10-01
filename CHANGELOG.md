@@ -1,5 +1,16 @@
 # Changelog
 
+## 26.10.1
+
+- Adottato il nuovo standard di versioning `_davstudios` `YY.M.REVISIONE`.
+- Sincronizzata la versione dell'app su npm, Tauri, Cargo, lockfile, documentazione e test.
+- Standardizzati i metadata ufficiali del pacchetto con publisher `_davstudios`, homepage, copyright, licenza MIT e metadata Debian.
+- Mantenuto l'identifier storico `studio.dav.duplicate` per preservare la continuità dell'identità applicativa.
+- Aggiunte al README le istruzioni per le release GitHub non firmate su Windows, macOS e Linux.
+- Il workflow GitHub Actions usa ora automaticamente la Description bilingue del commit associato al tag come descrizione della GitHub Release.
+- Rafforzata l'installazione delle dipendenze Linux contro repository Microsoft non raggiungibili sui runner Ubuntu.
+- Nessuna modifica alla logica di scansione, rilevamento duplicati, selezione o pulizia.
+
 ## 1.0.1
 
 - La versione mostrata nell'interfaccia viene ora letta automaticamente dal runtime Tauri.

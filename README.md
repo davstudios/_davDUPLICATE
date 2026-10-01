@@ -6,7 +6,7 @@
 **Trova duplicati reali e recupera spazio senza cancellazioni automatiche.**  
 **Find true duplicates and reclaim space without automatic deletion.**
 
-`v1.0.1` · Windows · macOS · Linux · Local-first · Open source
+`v26.10.1` · Windows · macOS · Linux · Local-first · Open source
 
 [![Italiano](https://img.shields.io/badge/Italiano-006EDB?style=for-the-badge)](#-italiano)
 [![English](https://img.shields.io/badge/English-141416?style=for-the-badge)](#-english)
@@ -77,6 +77,29 @@ I symlink non vengono seguiti durante la scansione, riducendo il rischio di loop
 </details>
 
 
+
+## Installazione delle release GitHub non firmate
+
+Le release di `_davDUPLICATE` sono distribuite direttamente tramite GitHub e, al momento, non utilizzano certificati commerciali di code signing o notarizzazione Apple. Il codice sorgente è disponibile pubblicamente con licenza MIT.
+
+### Windows
+
+Windows SmartScreen può mostrare l'avviso **“Windows ha protetto il PC”** perché l'installer non è firmato con un certificato di publisher attendibile. Se hai scaricato il file dalla repository GitHub ufficiale di `_davstudios`, seleziona **Ulteriori informazioni** e poi **Esegui comunque**.
+
+### macOS
+
+Gatekeeper può impedire la prima apertura perché l'app non è firmata con Developer ID e non è notarizzata da Apple. Dopo aver tentato di aprire l'app, vai in **Impostazioni di Sistema → Privacy e Sicurezza**, individua il messaggio relativo a `_davDUPLICATE` e scegli **Apri comunque**.
+
+### Linux
+
+Per un'AppImage può essere necessario rendere il file eseguibile prima dell'avvio:
+
+```bash
+chmod +x _davDUPLICATE*.AppImage
+```
+
+Scarica sempre le release dalla repository GitHub ufficiale di `_davstudios`. Quando viene pubblicato un hash SHA-256, puoi usarlo per verificare l'integrità del file scaricato.
+
 ## Piattaforme
 
 | Sistema | Architettura | Pacchetto |
@@ -107,6 +130,15 @@ npm run bundle
 ## Tecnologia
 
 _davDUPLICATE usa **Tauri 2**, **Rust**, **JavaScript + Vite**, **BLAKE3** e una verifica finale byte per byte. Il design system e il motion language sono condivisi con `_davRENAME` e `_davIMAGE`.
+
+
+## Informazioni pacchetto
+
+- Developer / Publisher: `_davstudios`
+- Homepage: https://davstudios.it
+- Licenza: MIT
+- Bundle identifier: `studio.dav.duplicate`
+- Versione corrente: `26.10.1`
 
 ## Licenza
 
@@ -178,6 +210,30 @@ Symlinks are not followed during scanning, reducing the risk of loops or unexpec
 </details>
 
 
+
+## Installing unsigned GitHub releases
+
+`_davDUPLICATE` releases are distributed directly through GitHub and currently do not use a commercial code-signing certificate or Apple notarization. The source code is publicly available under the MIT License.
+
+### Windows
+
+Windows SmartScreen may display **“Windows protected your PC”** because the installer is not signed by a trusted publisher certificate. If you downloaded it from the official `_davstudios` GitHub repository, select **More info** and then **Run anyway**.
+
+### macOS
+
+Gatekeeper may block the first launch because the app is not signed with Developer ID and is not notarized by Apple. After attempting to open it, go to **System Settings → Privacy & Security**, locate the `_davDUPLICATE` notice and choose **Open Anyway**.
+
+### Linux
+
+An AppImage may need executable permission before launch:
+
+```bash
+chmod +x _davDUPLICATE*.AppImage
+```
+
+Always download releases from the official `_davstudios` GitHub repository. When a SHA-256 hash is published, you can use it to verify the integrity of the downloaded file.
+
+
 ## Platforms
 
 | System | Architecture | Package |
@@ -208,6 +264,16 @@ npm run bundle
 ## Technology
 
 _davDUPLICATE uses **Tauri 2**, **Rust**, **JavaScript + Vite**, **BLAKE3**, and final byte-for-byte verification. Its design system and motion language are shared with `_davRENAME` and `_davIMAGE`.
+
+
+## Package information
+
+- Developer / Publisher: `_davstudios`
+- Homepage: https://davstudios.it
+- License: MIT
+- Bundle identifier: `studio.dav.duplicate`
+- Current version: `26.10.1`
+
 
 ## License
 

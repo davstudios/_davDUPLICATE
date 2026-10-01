@@ -1,4 +1,4 @@
-# _davDUPLICATE v1.0.1 build notes
+# _davDUPLICATE v26.10.1 build notes
 
 ## Requirements
 
@@ -20,4 +20,6 @@ On Ubuntu/Debian run `./INSTALL-LINUX-DEPS-UBUNTU.sh` first, then use `./RUN-LIN
 
 ## Release scope
 
-Version 1.0.1 is the stable exact-duplicate release. It verifies candidates byte for byte, recognizes hard links and moves explicitly selected files to the operating system Trash instead of permanently deleting them.
+Version 26.10.1 adopts the `_davstudios` `YY.M.REVISIONE` release standard, standardized package metadata and automatic bilingual GitHub Release descriptions. The exact-duplicate engine and cleanup behavior are unchanged from the previous stable release.
+
+The release is intentionally unsigned: Windows SmartScreen and macOS Gatekeeper may therefore show security warnings. See `README.md` for user-facing installation guidance.
