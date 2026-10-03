@@ -16,3 +16,4 @@ pub fn run_action(action:String,paths:Vec<String>,_options:ActionOptions)->Actio
     let details=groups.iter().enumerate().map(|(i,(s,g))|format!("Group {} · {} bytes each\n{}",i+1,s,g.join("\n"))).collect::<Vec<_>>().join("\n\n");
     result(true,"Duplicate scan completed",&format!("{} groups · {} bytes potentially recoverable",groups.len(),reclaim),details)
 }
+

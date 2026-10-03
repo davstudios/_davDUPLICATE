@@ -1,15 +1,23 @@
-# GitHub setup
+# GitHub setup — _davDUPLICATE
 
-1. Crea o usa la repository pubblica `_davDUPLICATE`.
-2. Copia il contenuto del progetto nella root senza eliminare la cartella locale `.git`.
-3. Esegui `npm test` e prova l'app con `npm run desktop` quando necessario.
-4. In GitHub Desktop usa come Summary `_davDUPLICATE v26.10.1` e inserisci nella Description le modifiche complete in formato bilingue `🇮🇹 ...` e `🇺🇸 ...`.
-5. Fai commit e Push Origin.
-6. Pubblica la release creando il tag:
+La release v26.10.2 segue lo standard `_davstudios` con versioning `YY.M.REVISIONE`.
+
+## GitHub Desktop
+
+Summary:
+
+`_davDUPLICATE v26.10.2`
+
+La Description del commit deve contenere entrambe le sezioni `🇮🇹` e `🇺🇸`. Il workflow GitHub Actions legge automaticamente il body del commit associato al tag e lo usa come descrizione della GitHub Release. Se una delle due sezioni manca, la pubblicazione viene interrotta.
+
+Dopo il commit esegui **Push origin**.
+
+## Tag release
 
 ```bash
-git tag -a v26.10.1 -m "Release _davDUPLICATE v26.10.1"
-git push origin v26.10.1
+git tag -a v26.10.2 -m "Release _davDUPLICATE v26.10.2"
+git push origin v26.10.2
 ```
 
-GitHub Actions creerà le build Windows, macOS e Linux e userà automaticamente la Description del commit taggato come testo della GitHub Release. Il workflow rifiuta una Description vuota o priva di entrambe le sezioni `🇮🇹` e `🇺🇸`.
+Il tag deve essere coerente con le versioni dichiarate in `package.json`, `package-lock.json`, `src-tauri/Cargo.toml`, `src-tauri/Cargo.lock` e `src-tauri/tauri.conf.json`.
+

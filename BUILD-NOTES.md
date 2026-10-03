@@ -1,25 +1,28 @@
-# _davDUPLICATE v26.10.1 build notes
+# Build notes — _davDUPLICATE v26.10.2
 
-## Requirements
+## Prerequisiti
 
 - Node.js LTS
-- Rust 1.77.2 or newer
-- Tauri 2 platform prerequisites
+- Rust stable
+- dipendenze native richieste da Tauri 2 sulla piattaforma di destinazione
 
-## Windows
+## Comandi
 
-Run `RUN-WINDOWS.bat` or `BUILD-WINDOWS.bat`.
+### Windows
 
-## macOS
+`BUILD-WINDOWS.bat`
 
-Run `./RUN-MACOS.sh` or `./BUILD-MACOS.sh`.
+### macOS
 
-## Linux
+`./BUILD-MACOS.sh`
 
-On Ubuntu/Debian run `./INSTALL-LINUX-DEPS-UBUNTU.sh` first, then use `./RUN-LINUX.sh` or `./BUILD-LINUX.sh`.
+### Linux
 
-## Release scope
+Esegui prima `./INSTALL-LINUX-DEPS-UBUNTU.sh` quando necessario, quindi `./BUILD-LINUX.sh`.
 
-Version 26.10.1 adopts the `_davstudios` `YY.M.REVISIONE` release standard, standardized package metadata and automatic bilingual GitHub Release descriptions. The exact-duplicate engine and cleanup behavior are unchanged from the previous stable release.
+## Release GitHub
 
-The release is intentionally unsigned: Windows SmartScreen and macOS Gatekeeper may therefore show security warnings. See `README.md` for user-facing installation guidance.
+Il workflow `.github/workflows/release.yml` crea NSIS, Universal DMG, AppImage e DEB. Prima della build verifica che il tag e le versioni in `package.json`, `package-lock.json`, Tauri, `Cargo.toml` e `Cargo.lock` siano perfettamente allineati.
+
+La v26.10.2 applica la repository normalization, mantiene il parser di `Cargo.lock` compatibile LF/CRLF e preserva il motore locale di rilevamento duplicati senza modifiche funzionali.
+

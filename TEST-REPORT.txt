@@ -1,15 +1,14 @@
-_davDUPLICATE v26.10.1
+_davDUPLICATE v26.10.2 — Test report
 
-Automated tests: 18
-Passed: 18
+Automated tests: 21
+Passed: 21
 Failed: 0
 
-Checks include duplicate-selection logic, hard-link-safe reclaimable calculations, filters, extension extraction, byte-size formatting, release-version synchronization, automatic UI version loading, _davstudios package metadata, bilingual GitHub Release description wiring, unsigned-release README guidance and the source no-comments audit.
+Checks include duplicate-selection logic, hard-link-safe reclaimable calculations, filters, extension extraction, byte-size formatting, bilingual GitHub release workflow, Linux workflow hardening, _davstudios package metadata, historical identifier preservation, icon-set integrity, release-version synchronization across package.json, package-lock.json, Tauri, Cargo.toml and Cargo.lock, Windows CRLF compatibility, automatic UI version loading and the source no-comments audit.
 
-Additional validation:
-- JavaScript syntax: PASS
-- JSON parsing: PASS
-- GitHub Actions YAML parsing: PASS
-- RELEASE_TAG v26.10.1 alignment check: PASS
-- Core application source compared with supplied source: unchanged
-- Tauri PNG icons: valid RGBA
+Repository normalization verification:
+- Pre-existing text files changed: 50/50
+- Pre-existing binary icon assets preserved byte-for-byte: 6/6
+- Functional source files checked for semantic equality after EOL/EOF normalization: 13/13
+- Real Cargo.lock CRLF simulation: 21/21 tests passed
+

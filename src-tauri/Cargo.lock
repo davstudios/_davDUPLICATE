@@ -698,7 +698,7 @@ dependencies = [
 
 [[package]]
 name = "davduplicate"
-version = "26.10.1"
+version = "26.10.2"
 dependencies = [
  "blake3",
  "same-file",
@@ -5303,3 +5303,4 @@ dependencies = [
  "syn 3.0.5",
  "winnow 1.0.4",
 ]
+

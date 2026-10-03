@@ -1,15 +1,20 @@
 # Changelog
 
+## 26.10.2
+
+- Eseguita la repository normalization completa dei file testuali con regole EOL/EOF deterministiche.
+- Rafforzata la sincronizzazione versione includendo package-lock.json e Cargo.lock.
+- Reso il parser di Cargo.lock compatibile con checkout Windows CRLF.
+- Aggiornato il workflow GitHub Actions con Description bilingue 🇮🇹/🇺🇸, verifica completa delle versioni e hardening Linux.
+- Preservati byte-per-byte gli asset binari delle icone e aggiunti metadata di release nella relativa cartella.
+- Nessuna modifica funzionale al motore di rilevamento duplicati, alla logica di selezione o alla pulizia tramite Cestino/Trash.
+
 ## 26.10.1
 
-- Adottato il nuovo standard di versioning `_davstudios` `YY.M.REVISIONE`.
-- Sincronizzata la versione dell'app su npm, Tauri, Cargo, lockfile, documentazione e test.
-- Standardizzati i metadata ufficiali del pacchetto con publisher `_davstudios`, homepage, copyright, licenza MIT e metadata Debian.
-- Mantenuto l'identifier storico `studio.dav.duplicate` per preservare la continuità dell'identità applicativa.
-- Aggiunte al README le istruzioni per le release GitHub non firmate su Windows, macOS e Linux.
-- Il workflow GitHub Actions usa ora automaticamente la Description bilingue del commit associato al tag come descrizione della GitHub Release.
-- Rafforzata l'installazione delle dipendenze Linux contro repository Microsoft non raggiungibili sui runner Ubuntu.
-- Nessuna modifica alla logica di scansione, rilevamento duplicati, selezione o pulizia.
+- Adottato il sistema di versioning `_davstudios` `YY.M.REVISIONE`.
+- Standardizzati metadata applicazione, licenza MIT, homepage, publisher e packaging multipiattaforma.
+- Mantenuto invariato l'identifier storico `studio.dav.duplicate`.
+- Aggiunte istruzioni per release non firmate e distribuzione tramite GitHub.
 
 ## 1.0.1
 
@@ -51,3 +56,4 @@ Initial preview of `_davDUPLICATE`.
 - Shared `_davstudios` themes, motion system, donation and website buttons.
 - Windows, macOS and Linux release workflow.
 - Source comment audit.
+

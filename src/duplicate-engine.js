@@ -73,3 +73,4 @@ export function extensionChoices(groups) {
 export function countDuplicateFiles(groups) {
   return groups.reduce((total, group) => total + Math.max(0, group.files.filter((file) => !file.hardLink).length - 1), 0);
 }
+

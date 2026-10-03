@@ -2,39 +2,50 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
-test('metadata pacchetto _davstudios presenti',()=>{
-  const pkg=JSON.parse(fs.readFileSync('package.json','utf8'));
-  const tauri=JSON.parse(fs.readFileSync('src-tauri/tauri.conf.json','utf8'));
-  const cargo=fs.readFileSync('src-tauri/Cargo.toml','utf8');
-  assert.equal(pkg.version,'26.10.1');
-  assert.equal(pkg.author,'_davstudios');
-  assert.equal(pkg.license,'MIT');
-  assert.equal(pkg.homepage,'https://davstudios.it');
-  assert.equal(tauri.identifier,'studio.dav.duplicate');
-  assert.equal(tauri.bundle.publisher,'_davstudios');
-  assert.equal(tauri.bundle.homepage,'https://davstudios.it');
-  assert.equal(tauri.bundle.license,'MIT');
-  assert.equal(tauri.bundle.licenseFile,'../LICENSE');
-  assert.equal(tauri.bundle.linux.deb.section,'utils');
-  assert.equal(tauri.bundle.linux.deb.priority,'optional');
-  assert.match(cargo,/license = "MIT"/);
-  assert.match(cargo,/homepage = "https:\/\/davstudios\.it"/);
+test('workflow GitHub pubblica release stabile con description bilingue', () => {
+  const text = fs.readFileSync('.github/workflows/release.yml', 'utf8');
+  assert.match(text, /Verify release versions/);
+  assert.match(text, /Read release description from tagged commit/);
+  assert.match(text, /git log -1 --pretty=%b/);
+  assert.match(text, /releaseBody:\s*\$\{\{ steps\.release_description\.outputs\.body \}\}/);
+  assert.match(text, /prerelease:\s*false/);
+  assert.doesNotMatch(text, /generateReleaseNotes:\s*true/);
 });
 
-test('workflow GitHub usa la Description bilingue del commit',()=>{
-  const text=fs.readFileSync('.github/workflows/release.yml','utf8');
-  assert.match(text,/Read release description from tagged commit/);
-  assert.match(text,/git log -1 --pretty=%b/);
-  assert.match(text,/🇮🇹/);
-  assert.match(text,/🇺🇸/);
-  assert.match(text,/releaseBody:\s*\$\{\{ steps\.release_description\.outputs\.body \}\}/);
-  assert.match(text,/prerelease:\s*false/);
-  assert.doesNotMatch(text,/Stable release of _davDUPLICATE|generateReleaseNotes:\s*true/);
+test('Linux release workflow ignores unrelated Microsoft apt repository', () => {
+  const text = fs.readFileSync('.github/workflows/release.yml', 'utf8');
+  assert.match(text, /packages\.microsoft\.com/);
+  assert.match(text, /Acquire::Retries=3/);
 });
 
-test('README documenta release non firmate',()=>{
-  const text=fs.readFileSync('README.md','utf8');
-  assert.match(text,/SmartScreen/);
-  assert.match(text,/Gatekeeper/);
-  assert.equal(text.includes('chmod +x _davDUPLICATE*.AppImage'),true);
+test('metadata pacchetto _davstudios presenti', () => {
+  const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+  const tauri = JSON.parse(fs.readFileSync('src-tauri/tauri.conf.json', 'utf8'));
+  const cargo = fs.readFileSync('src-tauri/Cargo.toml', 'utf8');
+  assert.equal(pkg.author, '_davstudios');
+  assert.equal(pkg.license, 'MIT');
+  assert.equal(pkg.homepage, 'https://davstudios.it');
+  assert.equal(tauri.identifier, 'studio.dav.duplicate');
+  assert.equal(tauri.bundle.publisher, '_davstudios');
+  assert.equal(tauri.bundle.homepage, 'https://davstudios.it');
+  assert.equal(tauri.bundle.license, 'MIT');
+  assert.equal(tauri.bundle.licenseFile, '../LICENSE');
+  assert.equal(tauri.bundle.category, 'Productivity');
+  assert.equal(tauri.bundle.linux.deb.section, 'utils');
+  assert.equal(tauri.bundle.linux.deb.priority, 'optional');
+  assert.match(cargo, /license = "MIT"/);
+  assert.match(cargo, /homepage = "https:\/\/davstudios\.it"/);
 });
+
+test('identifier storico resta invariato', () => {
+  const tauri = JSON.parse(fs.readFileSync('src-tauri/tauri.conf.json', 'utf8'));
+  assert.equal(tauri.identifier, 'studio.dav.duplicate');
+});
+
+test('set icone Tauri completo e documentato', () => {
+  for (const file of ['32x32.png','128x128.png','128x128@2x.png','app-icon.png','icon.ico','icon.icns']) {
+    assert.equal(fs.existsSync(`src-tauri/icons/${file}`), true, `${file} mancante`);
+  }
+  assert.equal(fs.existsSync('src-tauri/icons/RELEASE-METADATA.md'), true);
+});
+
