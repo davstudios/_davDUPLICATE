@@ -30,3 +30,4 @@ if (mismatches.length) {
 
 console.log(`Release versions are aligned on ${expected}.`);
 
+

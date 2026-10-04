@@ -3,70 +3,62 @@
 
 # _davDUPLICATE
 
-**Trova duplicati reali e recupera spazio senza cancellazioni automatiche.**  
-**Find true duplicates and reclaim space without automatic deletion.**
+**Trova duplicati reali e recupera spazio in sicurezza, interamente in locale.**  
+**Find true duplicates and reclaim space safely, entirely on your device.**
 
-`v26.10.2` · Windows · macOS · Linux · Local-first · Open source
+Windows · macOS · Linux · Local-first · Open source
 
 [![Italiano](https://img.shields.io/badge/Italiano-006EDB?style=for-the-badge)](#-italiano)
 [![English](https://img.shields.io/badge/English-141416?style=for-the-badge)](#-english)
-
 </div>
 
 ---
 
 # 🇮🇹 Italiano
 
-_davDUPLICATE è un'app desktop multipiattaforma di **_davstudios** progettata per trovare file realmente identici senza affidarsi soltanto al nome o all'estensione.
-
-La scansione rimane **interamente locale** e segue una pipeline progressiva per evitare di calcolare subito l'hash completo di ogni file.
+_davDUPLICATE è un'app desktop multipiattaforma di **_davstudios** progettata per trovare file realmente identici senza basarsi soltanto su nome o estensione. La scansione resta sul dispositivo e usa una pipeline progressiva che riduce il lavoro inutile prima della verifica finale byte per byte.
 
 <p>
   <a href="https://www.davstudios.it"><img src=".github/assets/website-it.svg" height="46" alt="Visita il sito"></a>
-  <a href="https://buymeacoffee.com/davstudios"><img src=".github/assets/buy-coffee-it.svg" height="46" alt="Comprami Un Caffè"></a>
+  <a href="https://buymeacoffee.com/davstudios"><img src=".github/assets/buy-coffee-it.svg" height="46" alt="Offrimi Un Caffè"></a>
 </p>
 
-## Come trova i duplicati
+## Funzioni principali
+
+- selezione nativa di file e cartelle;
+- drag & drop;
+- scansione ricorsiva senza seguire symlink;
+- pipeline dimensione → quick hash → BLAKE3 completo → verifica byte per byte;
+- riconoscimento degli hard link;
+- calcolo dello spazio realmente recuperabile per gruppo e totale;
+- ricerca e filtri per nome, percorso, dimensione ed estensione;
+- strategie automatiche per mantenere il file più vecchio, più recente, con percorso più corto o in una cartella preferita;
+- selezione manuale delle copie da rimuovere;
+- scansione annullabile con avanzamento locale;
+- spostamento sicuro dei file selezionati nel Cestino/Trash;
+- registro locale delle operazioni completate;
+- interfaccia italiana e inglese;
+- tema Sistema, Chiaro e Scuro;
+- motion system coerente con il sito `_davstudios`.
+
+## Come vengono verificati i duplicati
 
 ```text
 1. Raggruppamento per dimensione
-2. Quick hash sui candidati
+2. Quick hash dei candidati
 3. Hash BLAKE3 completo
 4. Verifica byte per byte
 ```
 
-Solo i file che superano tutte le fasi vengono mostrati come duplicati esatti.
+Un file viene mostrato come duplicato esatto solo dopo aver superato tutte le fasi. Gli hard link vengono riconosciuti e non sono conteggiati come spazio duplicato recuperabile.
 
-### Funzioni principali
+## Sicurezza
 
-- selezione di file e cartelle;
-- drag & drop;
-- scansione ricorsiva senza seguire symlink;
-- pipeline size → quick hash → BLAKE3 → byte verification;
-- riconoscimento degli hard link;
-- spazio recuperabile per gruppo e totale;
-- filtri per nome, percorso, dimensione ed estensione;
-- auto-selezione Keep oldest, Keep newest, shortest path e cartella preferita;
-- selezione manuale dei file;
-- annullamento della scansione;
-- spostamento dei file selezionati nel Cestino/Trash;
-- registro locale delle operazioni di pulizia;
-- italiano e inglese;
-- tema Sistema, Chiaro e Scuro.
+_davDUPLICATE non elimina automaticamente alcun file. Le copie selezionate sono sempre visibili prima della pulizia e l'operazione utilizza il Cestino/Trash del sistema operativo.
 
-> Gli hard link possono avere percorsi diversi ma condividere gli stessi dati fisici. _davDUPLICATE li segnala e non li considera spazio duplicato recuperabile.
+La scansione non segue i link simbolici, riducendo il rischio di loop o attraversamenti inattesi del filesystem.
 
-<details>
-<summary><strong>Sicurezza</strong></summary>
-
-_davDUPLICATE non elimina automaticamente alcun file. La selezione viene sempre mostrata prima dell'operazione e la pulizia usa il Cestino/Trash del sistema operativo.
-
-I symlink non vengono seguiti durante la scansione, riducendo il rischio di loop o attraversamenti inattesi del filesystem.
-
-</details>
-
-<details>
-<summary><strong>Privacy</strong></summary>
+## Privacy e local-first
 
 - nessun account;
 - nessun upload;
@@ -74,40 +66,7 @@ I symlink non vengono seguiti durante la scansione, riducendo il rischio di loop
 - nessuna telemetria integrata;
 - hash e confronti eseguiti sul dispositivo.
 
-</details>
-
-
-## Installazione delle release non firmate
-
-Le release di `_davDUPLICATE` sono distribuite direttamente tramite GitHub e, al momento, non utilizzano certificati commerciali di code signing o notarizzazione Apple. Il codice sorgente è disponibile pubblicamente con licenza MIT.
-
-### Windows
-
-Windows SmartScreen può mostrare l'avviso **“Windows ha protetto il PC”** perché l'installer non è firmato con un certificato di publisher attendibile. Se hai scaricato il file dalla repository GitHub ufficiale di `_davstudios`, seleziona **Ulteriori informazioni** e poi **Esegui comunque**.
-
-### macOS
-
-Gatekeeper può impedire la prima apertura perché l'app non è firmata con Developer ID e non è notarizzata da Apple. Dopo aver tentato di aprire l'app, vai in **Impostazioni di Sistema → Privacy e Sicurezza**, individua il messaggio relativo a `_davDUPLICATE` e scegli **Apri comunque**.
-
-### Linux
-
-Per un'AppImage può essere necessario rendere il file eseguibile prima dell'avvio:
-
-```bash
-chmod +x _davDUPLICATE*.AppImage
-```
-
-Scarica sempre le release dalla repository GitHub ufficiale di `_davstudios`.
-
-## Informazioni pacchetto
-
-- Developer / Publisher: `_davstudios`
-- Homepage: https://davstudios.it
-- Copyright: © 2026 _davstudios
-- Licenza: MIT
-- Categoria: Productivity
-- Bundle identifier: `studio.dav.duplicate`
-- Versione corrente: `26.10.2`
+I file analizzati e i relativi contenuti restano sul computer.
 
 ## Piattaforme
 
@@ -117,7 +76,31 @@ Scarica sempre le release dalla repository GitHub ufficiale di `_davstudios`.
 | macOS | Intel + Apple Silicon | Universal `.dmg` |
 | Linux | x64 | `.AppImage` / `.deb` |
 
-## Sviluppo locale
+Le release vengono compilate tramite GitHub Actions sui rispettivi sistemi operativi.
+
+## Installazione di release non firmate
+
+Le build pubbliche non utilizzano attualmente un certificato commerciale Windows né Apple Developer ID/notarizzazione. Scarica sempre gli artefatti dalla repository GitHub ufficiale di `_davstudios`.
+
+### Windows
+
+SmartScreen può mostrare **Windows ha protetto il PC**. Se il file proviene dalla repository ufficiale, scegli **Ulteriori informazioni → Esegui comunque**. La build Release è configurata come applicazione GUI tramite Windows GUI subsystem e non apre una finestra CMD separata.
+
+### macOS
+
+Se Gatekeeper blocca la prima apertura, prova ad aprire l'app e poi vai in **Impostazioni di Sistema → Privacy e Sicurezza → Apri comunque**.
+
+### Linux
+
+Per un'AppImage può essere necessario renderla eseguibile:
+
+```bash
+chmod +x _davDUPLICATE*.AppImage
+```
+
+## Sviluppo
+
+Requisiti: Node.js, Rust e prerequisiti Tauri del sistema operativo.
 
 ```bash
 npm install
@@ -130,36 +113,62 @@ Test:
 npm test
 ```
 
-Build:
+Build locale:
 
 ```bash
 npm run bundle
 ```
 
-## Tecnologia
+Gli artefatti vengono generati in `src-tauri/target/release/bundle/`.
 
-_davDUPLICATE usa **Tauri 2**, **Rust**, **JavaScript + Vite**, **BLAKE3** e una verifica finale byte per byte. Il design system e il motion language sono condivisi con `_davRENAME` e `_davIMAGE`.
+## Stack e identità
+
+- Tauri 2;
+- Rust;
+- JavaScript + Vite;
+- BLAKE3;
+- verifica finale byte per byte;
+- Plus Jakarta Sans con fallback di sistema;
+- motion system coerente con il sito `_davstudios`;
+- bundle identifier stabile: `studio.dav.duplicate`;
+- licenza MIT.
+
+La versione dell'app è gestita nei manifest tecnici e nelle GitHub Release; non viene mostrata nell'interfaccia ordinaria per mantenere la UI pulita e impedire stringhe di versione duplicate.
 
 ## Licenza
 
 Distribuito con licenza **MIT**. Consulta [`LICENSE`](LICENSE).
 
-<div align="right"><a href="#davduplicate">↑ Torna all'inizio</a></div>
-
 ---
 
-# 🇬🇧 English
+# 🇺🇸 English
 
-_davDUPLICATE is a cross-platform desktop app by **_davstudios** designed to find truly identical files without relying only on filenames or extensions.
-
-Scanning stays **entirely local** and uses a staged pipeline so full hashing is only performed on real candidates.
+_davDUPLICATE is a cross-platform desktop app by **_davstudios** designed to find truly identical files without relying only on names or extensions. Scanning stays on the device and uses a staged pipeline that avoids unnecessary work before the final byte-for-byte verification.
 
 <p>
   <a href="https://www.davstudios.it/en"><img src=".github/assets/website-en.svg" height="46" alt="Visit website"></a>
   <a href="https://buymeacoffee.com/davstudios"><img src=".github/assets/buy-coffee-en.svg" height="46" alt="Buy Me A Coffee"></a>
 </p>
 
-## How duplicates are detected
+## Main features
+
+- native file and folder selection;
+- drag & drop;
+- recursive scanning without following symlinks;
+- size → quick hash → full BLAKE3 → byte-for-byte verification pipeline;
+- hard-link awareness;
+- reclaimable-space calculation per group and overall;
+- search and filters by name, path, size and extension;
+- automatic strategies to keep the oldest, newest, shortest-path or preferred-folder file;
+- manual selection of copies to remove;
+- cancellable scanning with local progress;
+- safe movement of selected files to the operating system Trash/Recycle Bin;
+- local activity log for completed cleanup operations;
+- Italian and English interface;
+- System, Light and Dark themes;
+- motion system aligned with the `_davstudios` website.
+
+## How duplicates are verified
 
 ```text
 1. Group by file size
@@ -168,38 +177,15 @@ Scanning stays **entirely local** and uses a staged pipeline so full hashing is 
 4. Byte-for-byte verification
 ```
 
-Only files that pass every stage are presented as exact duplicates.
+A file is shown as an exact duplicate only after passing every stage. Hard links are detected and excluded from reclaimable duplicated storage.
 
-### Main features
+## Safety
 
-- native file and folder selection;
-- drag & drop;
-- recursive scanning without following symlinks;
-- size → quick hash → BLAKE3 → byte verification pipeline;
-- hard-link awareness;
-- reclaimable space per group and overall;
-- filters by name, path, size, and extension;
-- Keep oldest, Keep newest, shortest path, and preferred-folder auto-selection;
-- manual file selection;
-- cancellable scanning;
-- move selected files to the operating system Trash/Recycle Bin;
-- local cleanup activity log;
-- Italian and English interface;
-- System, Light, and Dark themes.
-
-> Hard links may have different paths while sharing the same physical data. _davDUPLICATE marks them and excludes them from reclaimable duplicated storage.
-
-<details>
-<summary><strong>Safety</strong></summary>
-
-_davDUPLICATE never deletes files automatically. Selection is always visible before an action and cleanup uses the operating system Trash/Recycle Bin.
+_davDUPLICATE never deletes files automatically. Selected copies are always visible before cleanup and the operation uses the operating system Trash/Recycle Bin.
 
 Symlinks are not followed during scanning, reducing the risk of loops or unexpected filesystem traversal.
 
-</details>
-
-<details>
-<summary><strong>Privacy</strong></summary>
+## Privacy and local-first
 
 - no account;
 - no uploads;
@@ -207,40 +193,7 @@ Symlinks are not followed during scanning, reducing the risk of loops or unexpec
 - no built-in telemetry;
 - hashes and comparisons run on your device.
 
-</details>
-
-
-## Installing unsigned GitHub releases
-
-`_davDUPLICATE` releases are distributed directly through GitHub and currently do not use a commercial Windows code-signing certificate or Apple Developer ID notarization. The source code is publicly available under the MIT License.
-
-### Windows
-
-Windows SmartScreen may display **“Windows protected your PC”** because the installer is not signed by a trusted publisher certificate. If you downloaded the file from the official `_davstudios` GitHub repository, choose **More info** and then **Run anyway**.
-
-### macOS
-
-Gatekeeper may block the first launch because the app is not signed with Developer ID and notarized by Apple. After attempting to open the app, go to **System Settings → Privacy & Security**, find the `_davDUPLICATE` message and choose **Open Anyway**.
-
-### Linux
-
-An AppImage may need to be marked as executable before launch:
-
-```bash
-chmod +x _davDUPLICATE*.AppImage
-```
-
-Always download releases from the official `_davstudios` GitHub repository.
-
-## Package information
-
-- Developer / Publisher: `_davstudios`
-- Homepage: https://davstudios.it
-- Copyright: © 2026 _davstudios
-- License: MIT
-- Category: Productivity
-- Bundle identifier: `studio.dav.duplicate`
-- Current version: `26.10.2`
+Analyzed files and their contents remain on your computer.
 
 ## Platforms
 
@@ -250,7 +203,31 @@ Always download releases from the official `_davstudios` GitHub repository.
 | macOS | Intel + Apple Silicon | Universal `.dmg` |
 | Linux | x64 | `.AppImage` / `.deb` |
 
-## Local development
+Releases are compiled through GitHub Actions on the corresponding operating systems.
+
+## Installing unsigned releases
+
+Public builds currently do not use a commercial Windows signing certificate or Apple Developer ID/notarization. Always download artifacts from the official `_davstudios` GitHub repository.
+
+### Windows
+
+SmartScreen may display **Windows protected your PC**. If the file comes from the official repository, choose **More info → Run anyway**. Release builds use the Windows GUI subsystem and do not open a separate CMD window.
+
+### macOS
+
+If Gatekeeper blocks the first launch, attempt to open the app and then go to **System Settings → Privacy & Security → Open Anyway**.
+
+### Linux
+
+An AppImage may need executable permission:
+
+```bash
+chmod +x _davDUPLICATE*.AppImage
+```
+
+## Development
+
+Requirements: Node.js, Rust and the Tauri prerequisites for your operating system.
 
 ```bash
 npm install
@@ -263,19 +240,28 @@ Tests:
 npm test
 ```
 
-Build:
+Local build:
 
 ```bash
 npm run bundle
 ```
 
-## Technology
+Artifacts are generated under `src-tauri/target/release/bundle/`.
 
-_davDUPLICATE uses **Tauri 2**, **Rust**, **JavaScript + Vite**, **BLAKE3**, and final byte-for-byte verification. Its design system and motion language are shared with `_davRENAME` and `_davIMAGE`.
+## Stack and identity
+
+- Tauri 2;
+- Rust;
+- JavaScript + Vite;
+- BLAKE3;
+- final byte-for-byte verification;
+- Plus Jakarta Sans with system fallback;
+- motion system aligned with the `_davstudios` website;
+- stable bundle identifier: `studio.dav.duplicate`;
+- MIT License.
+
+The application version is managed by the technical manifests and GitHub Releases; it is intentionally omitted from the ordinary interface to keep the UI clean and prevent duplicated version strings.
 
 ## License
 
 Released under the **MIT License**. See [`LICENSE`](LICENSE).
-
-<div align="right"><a href="#davduplicate">↑ Back to top</a></div>
-

@@ -1,6 +1,6 @@
 [package]
 name = "davduplicate"
-version = "26.10.2"
+version = "26.10.3"
 description = "_davDUPLICATE — local exact duplicate file finder by _davstudios."
 authors = ["_davstudios"]
 license = "MIT"

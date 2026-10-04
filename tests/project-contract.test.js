@@ -49,3 +49,50 @@ test('set icone Tauri completo e documentato', () => {
   assert.equal(fs.existsSync('src-tauri/icons/RELEASE-METADATA.md'), true);
 });
 
+test('interfaccia usa il supporto _davstudios aggiornato', () => {
+  const main = fs.readFileSync('src/main.js', 'utf8');
+  assert.match(main, /Offrimi Un Caffè/);
+  assert.doesNotMatch(main, /Comprami Un Caffè/);
+  assert.match(main, /davstudios\.it/);
+  assert.match(main, /MIT · Open source/);
+});
+
+test('motion system matches the _davstudios website v52 language', () => {
+  const motion = fs.readFileSync('src/motion.css', 'utf8');
+  assert.match(motion, /--motion-duration-base:720ms/);
+  assert.match(motion, /--motion-duration-slow:940ms/);
+  assert.match(motion, /--motion-step:72ms/);
+  assert.match(motion, /--motion-page-out:170ms/);
+  assert.match(motion, /--motion-page-in:430ms/);
+  assert.match(motion, /cubic-bezier\(\.16,1,\.3,1\)/);
+  assert.match(motion, /blur\(3px\)/);
+  assert.match(motion, /dav-theme-reveal 680ms/);
+  assert.match(motion, /prefers-reduced-motion:reduce/);
+  const main = fs.readFileSync('src/main.js', 'utf8');
+  assert.match(main, /navigatePage/);
+  assert.match(main, /is-page-leaving/);
+});
+
+test('Windows release usa GUI subsystem e non ha helper CLI figli', () => {
+  const main = fs.readFileSync('src-tauri/src/main.rs', 'utf8');
+  const backend = [
+    'src-tauri/src/backend.rs',
+    'src-tauri/src/core.rs',
+    'src-tauri/src/duplicate.rs',
+    'src-tauri/src/lib.rs'
+  ].map((path) => fs.readFileSync(path, 'utf8')).join('\n');
+  assert.match(main, /cfg_attr\(not\(debug_assertions\), windows_subsystem = "windows"\)/);
+  assert.doesNotMatch(backend, /Command::new|std::process::Command/);
+});
+
+test('README stabile e indipendente dalla release corrente', () => {
+  const readme = fs.readFileSync('README.md', 'utf8');
+  assert.match(readme, /Offrimi Un Caffè/);
+  assert.match(readme, /Local-first/);
+  assert.match(readme, /Windows GUI subsystem/);
+  assert.match(readme, /motion system coerente con il sito `_davstudios`/);
+  assert.doesNotMatch(readme, /Versione corrente:|Current version:|`v26\.10\.3`/);
+  for (const asset of ['website-it.svg','website-en.svg','buy-coffee-it.svg','buy-coffee-en.svg']) {
+    assert.equal(fs.existsSync(`.github/assets/${asset}`), true, `${asset} mancante`);
+  }
+});

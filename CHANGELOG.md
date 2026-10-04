@@ -1,5 +1,17 @@
 # Changelog
 
+## 26.10.3
+
+- Allineato il motion system al linguaggio del sito `_davstudios` v52 con easing, durate, reveal, stagger e transizioni pagina condivisi.
+- Aggiunte vere transizioni di uscita e ingresso tra Duplicati esatti, Attività e Impostazioni e reveal radiale del cambio tema.
+- Rimossa la versione dall'interfaccia ordinaria mantenendola esclusivamente nei manifest tecnici e nelle GitHub Release.
+- Aggiornata la dicitura italiana Buy Me A Coffee a `Offrimi Un Caffè`.
+- Normalizzato completamente `README.md` con struttura bilingue stabile e indipendente dalla release.
+- Configurata la build Windows Release con `windows_subsystem = "windows"` per eliminare la finestra CMD separata.
+- Rafforzati i test automatici per motion v52, GUI subsystem, README, UI senza versione e compatibilità LF/CRLF.
+- Eseguita una nuova repository normalization completa preservando il contenuto grafico delle icone.
+- Nessuna modifica funzionale al motore di rilevamento duplicati, alla logica di selezione o alla pulizia tramite Cestino/Trash.
+
 ## 26.10.2
 
 - Eseguita la repository normalization completa dei file testuali con regole EOL/EOF deterministiche.

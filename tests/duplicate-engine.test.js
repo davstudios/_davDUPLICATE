@@ -69,3 +69,4 @@ test('counts duplicate file paths', () => {
   assert.equal(countDuplicateFiles(groups), 2);
 });
 
+

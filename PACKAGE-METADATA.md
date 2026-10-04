@@ -1,8 +1,8 @@
 # _davDUPLICATE — Package metadata
 
 - Product name: `_davDUPLICATE`
-- Version: `26.10.2`
-- Public release tag: `v26.10.2`
+- Version: `26.10.3`
+- Public release tag: `v26.10.3`
 - Developer / Publisher: `_davstudios`
 - Identifier: `studio.dav.duplicate`
 - Homepage / Support: `https://davstudios.it`
@@ -13,7 +13,7 @@
 - Long description: `_davDUPLICATE finds byte-identical duplicate files locally with staged hashing, hard-link awareness and safe Trash cleanup.`
 - Linux Debian section: `utils`
 - Linux Debian priority: `optional`
+- Windows subsystem: `GUI` in Release builds
 - Code signing: no commercial Windows certificate; no Apple Developer ID/notarization in this release
 
 L'identifier storico è preservato per mantenere la continuità dell'identità applicativa tra le release.
-

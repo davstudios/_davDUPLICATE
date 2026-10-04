@@ -1,14 +1,23 @@
-_davDUPLICATE v26.10.2 — Test report
+_davDUPLICATE v26.10.3 — Test report
 
-Automated tests: 21
-Passed: 21
+Automated tests: 25
+Passed: 25
 Failed: 0
 
-Checks include duplicate-selection logic, hard-link-safe reclaimable calculations, filters, extension extraction, byte-size formatting, bilingual GitHub release workflow, Linux workflow hardening, _davstudios package metadata, historical identifier preservation, icon-set integrity, release-version synchronization across package.json, package-lock.json, Tauri, Cargo.toml and Cargo.lock, Windows CRLF compatibility, automatic UI version loading and the source no-comments audit.
+Checks include duplicate-selection logic, hard-link-safe reclaimable calculations, filters, extension extraction, byte-size formatting, bilingual GitHub release workflow, Linux workflow hardening, _davstudios package metadata, historical identifier preservation, icon-set integrity, v52 motion-system contract, Windows GUI subsystem, Buy Me A Coffee wording, stable README contract, release-version synchronization across package.json, package-lock.json, Tauri, Cargo.toml and Cargo.lock, Windows CRLF compatibility, UI without duplicated version strings and the source no-comments audit.
 
 Repository normalization verification:
-- Pre-existing text files changed: 50/50
-- Pre-existing binary icon assets preserved byte-for-byte: 6/6
-- Functional source files checked for semantic equality after EOL/EOF normalization: 13/13
-- Real Cargo.lock CRLF simulation: 21/21 tests passed
+- Pre-existing files changed: 59/59
+- Pre-existing binary icon assets refreshed without visual changes: 6/6
+- PNG/ICO pixel equality verified: 5/5
+- ICNS representations pixel-equal at all advertised sizes: 8/8
+- Core functional files semantically unchanged after neutral normalization: 7/7
+- Real Cargo.lock CRLF simulation: 25/25 tests passed
+- Final source-tree test run: 25/25 tests passed
 
+Additional validation:
+- JavaScript syntax checks passed
+- JSON manifests/schemas parsed successfully
+- GitHub Actions YAML parsed successfully
+- Shell scripts passed bash -n
+- Native Tauri build not executed locally because Cargo and node_modules are unavailable in the verification environment

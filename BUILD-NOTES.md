@@ -1,4 +1,4 @@
-# Build notes — _davDUPLICATE v26.10.2
+# Build notes — _davDUPLICATE v26.10.3
 
 ## Prerequisiti
 
@@ -24,5 +24,4 @@ Esegui prima `./INSTALL-LINUX-DEPS-UBUNTU.sh` quando necessario, quindi `./BUILD
 
 Il workflow `.github/workflows/release.yml` crea NSIS, Universal DMG, AppImage e DEB. Prima della build verifica che il tag e le versioni in `package.json`, `package-lock.json`, Tauri, `Cargo.toml` e `Cargo.lock` siano perfettamente allineati.
 
-La v26.10.2 applica la repository normalization, mantiene il parser di `Cargo.lock` compatibile LF/CRLF e preserva il motore locale di rilevamento duplicati senza modifiche funzionali.
-
+La v26.10.3 applica il motion system `_davstudios` derivato dal sito v52, rimuove la versione dall'interfaccia ordinaria, configura la build Windows Release con GUI subsystem, aggiorna il supporto Buy Me A Coffee e mantiene invariato il motore locale di rilevamento duplicati.

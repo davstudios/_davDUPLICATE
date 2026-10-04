@@ -384,3 +384,4 @@ pub fn move_to_trash(paths: Vec<String>) -> TrashResult {
     TrashResult { removed, failed }
 }
 
+

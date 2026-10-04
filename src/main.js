@@ -1,7 +1,6 @@
 import './styles.css';
 import './motion.css';
 import { invoke } from '@tauri-apps/api/core';
-import { getVersion } from '@tauri-apps/api/app';
 import { listen } from '@tauri-apps/api/event';
 import { getCurrentWebview } from '@tauri-apps/api/webview';
 import { open, confirm } from '@tauri-apps/plugin-dialog';
@@ -52,8 +51,7 @@ const state = {
     recursive: saved.recursive ?? true,
     minScanSize: saved.minScanSize ?? 1
   },
-  activity: JSON.parse(localStorage.getItem('davduplicate-activity') || '[]'),
-  appVersion: ''
+  activity: JSON.parse(localStorage.getItem('davduplicate-activity') || '[]')
 };
 
 function t(it, en) {
@@ -71,6 +69,75 @@ function applyTheme() {
   document.documentElement.lang = state.settings.language;
 }
 
+let pageTransitionLocked = false;
+
+function themeTransitionGeometry(element) {
+  if (!element) return null;
+  const rect = element.getBoundingClientRect();
+  const x = rect.left + rect.width / 2;
+  const y = rect.top + rect.height / 2;
+  return { x, y, radius: Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) };
+}
+
+function runUiTransition(kind, change, origin = null) {
+  const root = document.documentElement;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) {
+    change();
+    return;
+  }
+  if (kind === 'theme') {
+    const geometry = themeTransitionGeometry(origin);
+    if (geometry && typeof document.startViewTransition === 'function') {
+      root.style.setProperty('--theme-transition-x', `${geometry.x}px`);
+      root.style.setProperty('--theme-transition-y', `${geometry.y}px`);
+      root.style.setProperty('--theme-transition-radius', `${geometry.radius}px`);
+      root.classList.add('theme-transitioning', 'theme-transition-capture');
+      const transition = document.startViewTransition(() => change());
+      transition.ready.finally(() => root.classList.remove('theme-transition-capture'));
+      transition.finished.finally(() => root.classList.remove('theme-transitioning', 'theme-transition-capture'));
+      return;
+    }
+    root.classList.add('theme-transition-fallback');
+    change();
+    setTimeout(() => root.classList.remove('theme-transition-fallback'), 520);
+    return;
+  }
+  if (typeof document.startViewTransition === 'function') {
+    root.dataset.uiTransition = kind;
+    const transition = document.startViewTransition(() => change());
+    transition.finished.finally(() => {
+      if (root.dataset.uiTransition === kind) delete root.dataset.uiTransition;
+    });
+    return;
+  }
+  root.dataset.uiTransition = `${kind}-out`;
+  setTimeout(() => {
+    change();
+    root.dataset.uiTransition = `${kind}-in`;
+    setTimeout(() => {
+      if (root.dataset.uiTransition === `${kind}-in`) delete root.dataset.uiTransition;
+    }, 430);
+  }, 170);
+}
+
+async function navigatePage(page) {
+  if (pageTransitionLocked || page === state.page) return;
+  pageTransitionLocked = true;
+  try {
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const main = document.querySelector('.main');
+    if (!reduced && main) {
+      main.classList.add('is-page-leaving');
+      await new Promise((resolve) => setTimeout(resolve, 170));
+    }
+    state.page = page;
+    render('page');
+  } finally {
+    pageTransitionLocked = false;
+  }
+}
+
 function navButton(page, icon, label, disabled = false) {
   return `<button class="nav-item ${state.page === page ? 'active' : ''}" data-page="${page}" ${disabled ? 'disabled' : ''}>${icon}<span>${label}</span>${disabled ? `<small>${t('Presto', 'Soon')}</small>` : ''}</button>`;
 }
@@ -86,7 +153,7 @@ function shell(content, motion = 'none') {
         ${navButton('settings', icons.settings, t('Impostazioni', 'Settings'))}
       </nav>
       <div class="sidebar-bottom">
-        <button class="coffee-button" data-action="coffee">${icons.coffee}<span>${t('Comprami Un Caffè', 'Buy Me A Coffee')}</span></button>
+        <button class="coffee-button" data-action="coffee">${icons.coffee}<span>${t('Offrimi Un Caffè', 'Buy Me A Coffee')}</span></button>
         <button class="icon-button theme-toggle" data-action="theme"><span class="theme-icon theme-icon-sun">${icons.sun}</span><span class="theme-icon theme-icon-moon">${icons.moon}</span></button>
       </div>
     </aside>
@@ -104,7 +171,7 @@ function render(motion = 'none') {
 
 function renderExact(motion = 'none') {
   if (!state.scanSummary && !state.scanning) {
-    shell(`<header class="topbar"><div><div class="eyebrow">_davDUPLICATE${state.appVersion ? ` · v${escapeHtml(state.appVersion)}` : ''}</div><h1>${t('Trova copie vere. Recupera spazio.', 'Find true copies. Reclaim space.')}</h1></div></header>
+    shell(`<header class="topbar"><div><div class="eyebrow">_davDUPLICATE</div><h1>${t('Trova copie vere. Recupera spazio.', 'Find true copies. Reclaim space.')}</h1></div></header>
       <section class="empty-wrap">
         <div class="drop-zone" id="drop-zone">
           <div class="drop-icon">${icons.duplicate}</div>
@@ -204,7 +271,7 @@ function renderSettings(motion = 'page') {
     <section class="settings-grid">
       <div class="panel settings-card"><h2>${t('Scansione', 'Scanning')}</h2><div class="setting-row"><span><strong>${t('Cartelle ricorsive','Recursive folders')}</strong><small>${t('Scansiona anche tutte le sottocartelle senza seguire symlink.','Scan subfolders without following symlinks.')}</small></span><label class="switch"><input type="checkbox" data-setting="recursive" ${state.settings.recursive ? 'checked' : ''}><span></span></label></div><div class="setting-control"><span class="setting-control-label">${t('Dimensione minima durante la scansione','Minimum size while scanning')}</span>${davSelect('minScanSize', String(state.settings.minScanSize), [['1',t('Qualsiasi file non vuoto','Any non-empty file')],['1048576','1 MB'],['10485760','10 MB'],['104857600','100 MB']])}</div></div>
       <div class="panel settings-card"><h2>${t('Aspetto', 'Appearance')}</h2><div class="setting-control"><span class="setting-control-label">${t('Tema','Theme')}</span>${davSelect('theme', state.settings.theme, [['system',t('Sistema','System')],['light',t('Chiaro','Light')],['dark',t('Scuro','Dark')]])}</div><div class="setting-control"><span class="setting-control-label">${t('Lingua','Language')}</span>${davSelect('language', state.settings.language, [['it','Italiano'],['en','English']])}</div></div>
-      <div class="panel about-card"><div class="brand big"><span>_dav</span>DUPLICATE</div><p>${t('Ricerca duplicati esatti locale, verificata byte per byte e progettata per non cancellare automaticamente nulla.', 'Local exact-duplicate finder, verified byte for byte and designed to never delete anything automatically.')}</p><div class="about-links"><button class="website-button" data-action="website">${icons.globe}<span>davstudios.it</span></button><button class="coffee-button wide" data-action="coffee">${icons.coffee}<span>${t('Comprami Un Caffè','Buy Me A Coffee')}</span></button></div><div class="version">${state.appVersion ? `v${escapeHtml(state.appVersion)} · ` : ''}${t('Release stabile','Stable release')}</div></div>
+      <div class="panel about-card"><div class="brand big"><span>_dav</span>DUPLICATE</div><p>${t('Ricerca duplicati esatti locale, verificata byte per byte e progettata per non cancellare automaticamente nulla.', 'Local exact-duplicate finder, verified byte for byte and designed to never delete anything automatically.')}</p><div class="about-links"><button class="website-button" data-action="website">${icons.globe}<span>davstudios.it</span></button><button class="coffee-button wide" data-action="coffee">${icons.coffee}<span>${t('Offrimi Un Caffè','Buy Me A Coffee')}</span></button></div><div class="about-meta">MIT · Open source</div></div>
     </section>`, motion);
   bindSettings();
 }
@@ -219,10 +286,17 @@ function davSelect(id, value, options) {
 }
 
 function bindGlobalEvents() {
-  document.querySelectorAll('[data-page]').forEach((node) => node.addEventListener('click', () => { state.page = node.dataset.page; render('page'); }));
+  document.querySelectorAll('[data-page]').forEach((node) => node.addEventListener('click', () => navigatePage(node.dataset.page)));
   document.querySelectorAll('[data-action="coffee"]').forEach((node) => node.addEventListener('click', () => external('https://buymeacoffee.com/davstudios')));
   document.querySelectorAll('[data-action="website"]').forEach((node) => node.addEventListener('click', () => external(state.settings.language === 'en' ? 'https://www.davstudios.it/en' : 'https://www.davstudios.it')));
-  document.querySelectorAll('[data-action="theme"]').forEach((node) => node.addEventListener('click', () => { const current = document.documentElement.dataset.theme; setVisualSetting('theme', current === 'dark' ? 'light' : 'dark', 'theme'); }));
+  document.querySelectorAll('[data-action="theme"]').forEach((node) => node.addEventListener('click', () => {
+    const current = document.documentElement.dataset.theme;
+    runUiTransition('theme', () => {
+      state.settings.theme = current === 'dark' ? 'light' : 'dark';
+      saveSettings();
+      render('content');
+    }, node);
+  }));
 }
 
 function bindExactEvents() {
@@ -255,23 +329,10 @@ function bindSettings() {
       const id=select.dataset.davSelect;
       const value=option.dataset.value;
       select.classList.remove('is-open');
-      if (id === 'theme' || id === 'language') setVisualSetting(id, value, id);
+      if (id === 'theme' || id === 'language') runUiTransition(id, () => { state.settings[id]=value; saveSettings(); render('content'); }, option);
       else { state.settings[id]=Number(value); saveSettings(); render(); }
     }));
   });
-}
-
-function setVisualSetting(key, value, kind) {
-  if (String(state.settings[key]) === String(value)) return;
-  const apply=()=>{ state.settings[key]=value; saveSettings(); render(); };
-  document.documentElement.dataset.uiTransition=kind;
-  if (document.startViewTransition) {
-    const transition=document.startViewTransition(apply);
-    transition.finished.finally(()=>delete document.documentElement.dataset.uiTransition);
-  } else {
-    document.documentElement.dataset.uiTransition=`${kind}-out`;
-    setTimeout(()=>{ apply(); document.documentElement.dataset.uiTransition=`${kind}-in`; setTimeout(()=>delete document.documentElement.dataset.uiTransition,430); },180);
-  }
 }
 
 async function addFiles() {
@@ -370,11 +431,6 @@ function toast(text, kind='success') {
 
 async function init() {
   applyTheme();
-  try {
-    state.appVersion = await getVersion();
-  } catch {
-    state.appVersion = '';
-  }
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{ if(state.settings.theme==='system') render(); });
   await listen('duplicate-progress',(event)=>{ state.progress=event.payload; if(state.scanning) render(); });
   if (isTauri) {
